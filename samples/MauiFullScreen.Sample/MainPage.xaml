@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+             xmlns:droid="clr-namespace:CommunityToolkit.Maui.PlatformConfiguration.AndroidSpecific;assembly=CommunityToolkit.Maui"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MauiFullScreen.Sample.MainPage"
+             droid:NavigationBar.Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}"
+             droid:NavigationBar.Style="Default">
+
+    <ContentPage.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="{StaticResource Primary}" StatusBarStyle="Default" />
+    </ContentPage.Behaviors>
+
+    <Grid x:Name="MainRoot" RowDefinitions="*,Auto">
+        <RefreshView
+            x:Name="MainRefreshView"
+            IsRefreshing="False">
+            <WebView
+                x:Name="MainWebView"
+                Source="https://github.com/IgrisModz"
+                android:WebView.DisplayZoomControls="False"
+                android:WebView.EnableZoomControls="True"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill" />
+        </RefreshView>
+        <Button x:Name="FullScreenBtn"
+                Grid.Row="1"
+                VerticalOptions="End"
+                SemanticProperties.Hint="Toggle fullscreen mode on click"
+                HorizontalOptions="Fill" />
+    </Grid>
+
+</ContentPage>
