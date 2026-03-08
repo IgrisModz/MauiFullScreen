@@ -15,6 +15,7 @@
 	  <NuGetAuditMode>all</NuGetAuditMode>
     
 	  <!-- MAUI Specific -->
+    <MauiXamlInflator>SourceGen</MauiXamlInflator>
 	  <MauiPackageVersion>10.0.41</MauiPackageVersion>
 	  <MauiStrictXamlCompilation>true</MauiStrictXamlCompilation>
 	  <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
