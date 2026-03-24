@@ -12,6 +12,7 @@ on:
 env:
   PathToLibrarySolution: src/MauiFullScreen.slnx
   PathToSampleSolution: samples/MauiFullScreen.samples.slnx
+  PathToMauiFullScreenTestsCsproj: src/MauiFullScreen.Tests/MauiFullScreen.Tests.csproj
 
 jobs:
   build:
@@ -46,7 +47,7 @@ jobs:
     - name: Build Library & Sample
       run: dotnet build ${{ env.PathToLibrarySolution }} --configuration Release
     - name: Test
-      run: dotnet test ${{ env.PathToMauiIconsTestsCsproj }} --configuration Release --no-build --verbosity normal
+      run: dotnet test ${{ env.PathToMauiFullScreenTestsCsproj }} --configuration Release --no-build --verbosity normal
     - name: Pack Library Packages
       run: dotnet pack ${{ env.PathToLibrarySolution }} --configuration Release --no-build
     - name: Upload NuGet Packages
