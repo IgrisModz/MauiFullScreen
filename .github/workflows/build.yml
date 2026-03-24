@@ -1,7 +1,7 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: .NET
+name: .NET CI
 
 on:
   push:
@@ -9,20 +9,48 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  PathToLibrarySolution: src/MauiFullScreen.slnx
+  PathToSampleSolution: samples/MauiFullScreen.samples.slnx
+
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
+    - name: Set up Xcode
+      if: runner.os == 'macOS'
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '26.0'
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
-    - name: Restore dependencies
-      run: dotnet restore src/MauiFullScreen/MauiFullScreen.csproj
-    - name: Build
-      run: dotnet build src/MauiFullScreen.sln --no-restore
+    - name: Setup Java
+      uses: actions/setup-java@v5
+      with:
+        distribution: 'microsoft'
+        java-version: '21'
+    - name: Install MAUI Workloads
+      run: |
+        dotnet workload install maui
+        dotnet workload restore ${{ env.PathToLibrarySolution }}
+    - name: Display dotnet info
+      run: dotnet --info
+    - name: Build Library & Sample
+      run: dotnet build ${{ env.PathToLibrarySolution }} --configuration Release
     - name: Test
-      run: dotnet test --no-build --verbosity normal src/MauiFullScreen.sln
+      run: dotnet test ${{ env.PathToMauiIconsTestsCsproj }} --configuration Release --no-build --verbosity normal
+    - name: Pack Library Packages
+      run: dotnet pack ${{ env.PathToLibrarySolution }} --configuration Release --no-build
+    - name: Upload NuGet Packages
+      uses: actions/upload-artifact@v7
+      with:
+        name: nuget-packages-${{ matrix.os }}
+        path: '**/*.nupkg'
