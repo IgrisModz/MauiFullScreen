@@ -10,48 +10,56 @@ on:
     branches: [ "master" ]
 
 env:
-  PathToLibrarySolution: src/MauiFullScreen.slnx
-  PathToSampleSolution: samples/MauiFullScreen.samples.slnx
-  PathToMauiFullScreenTestsCsproj: src/MauiFullScreen.Tests/MauiFullScreen.Tests.csproj
+    LATEST_NET_VERSION: '10.0.x'
+    PathToLibrarySolution: src/MauiFullScreen.slnx
+    PathToSampleSolution: samples/MauiFullScreen.samples.slnx
+    PathToMauiFullScreenTestsCsproj: src/MauiFullScreen.Tests/MauiFullScreen.Tests.csproj
+    MauiFullScreenSample_Xcode_Version: '26.2'
 
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest]
+        os: [windows-latest, macos-26]
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v6
-    - name: Set up Xcode
-      if: runner.os == 'macOS'
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '26.0'
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v5
-      with:
-        dotnet-version: 10.0.x
-    - name: Setup Java
-      uses: actions/setup-java@v5
-      with:
-        distribution: 'microsoft'
-        java-version: '21'
-    - name: Install MAUI Workloads
-      run: |
-        dotnet workload install maui
-        dotnet workload restore ${{ env.PathToLibrarySolution }}
-    - name: Display dotnet info
-      run: dotnet --info
-    - name: Build Library & Sample
-      run: dotnet build ${{ env.PathToLibrarySolution }} --configuration Release
-    - name: Test
-      run: dotnet test ${{ env.PathToMauiFullScreenTestsCsproj }} --configuration Release --verbosity normal
-    - name: Pack Library Packages
-      run: dotnet pack ${{ env.PathToLibrarySolution }} --configuration Release
-    - name: Upload NuGet Packages
-      uses: actions/upload-artifact@v7
-      with:
-        name: nuget-packages-${{ matrix.os }}
-        path: '**/*.nupkg'
+        -   name: Checkout code
+            uses: actions/checkout@v6
+
+        -   name: Set Latest Xcode Version
+            if: runner.os == 'macOS'
+            uses: maxim-lobanov/setup-xcode@v1
+            with:
+                xcode-version: ${{ env.MauiFullScreenSample_Xcode_Version }}
+
+        -   name: Install Latest .NET SDK, v${{ env.LATEST_NET_VERSION }}
+            uses: actions/setup-dotnet@v5
+            with:
+                dotnet-version: ${{ env.LATEST_NET_VERSION }}
+                dotnet-quality: 'ga'
+            
+        -   uses: actions/setup-java@v5
+            with:
+                distribution: 'microsoft'
+                java-version: '21'
+
+        -   name: Install MAUI Workloads
+            run: |
+                dotnet workload install maui
+                dotnet workload update
+            
+        -   name: Display dotnet info
+            run: dotnet --info
+        -   name: Build Library & Sample
+            run: dotnet build ${{ env.PathToLibrarySolution }} --configuration Release
+        -   name: Test
+            run: dotnet test ${{ env.PathToMauiFullScreenTestsCsproj }} --configuration Release --verbosity normal
+        -   name: Pack Library Packages
+            run: dotnet pack ${{ env.PathToLibrarySolution }} --configuration Release
+        -   name: Upload NuGet Packages
+            uses: actions/upload-artifact@v7
+            with:
+                name: nuget-packages-${{ matrix.os }}
+                path: '**/*.nupkg'
