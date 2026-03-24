@@ -25,7 +25,7 @@
 		<ApplicationTitle>MauiFullScreen.Sample</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.mauifullscreen.sample</ApplicationId>
+		<ApplicationId>com.igrismodz.mauifullscreen.sample</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
