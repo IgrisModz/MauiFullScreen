@@ -17,6 +17,7 @@
 		<SingleProject>true</SingleProject>
 		<AllowMissingPrunePackageData>true</AllowMissingPrunePackageData>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<IsPackable>false</IsPackable>
 
 		<RootNamespace>MauiFullScreen.Sample</RootNamespace>
 		<ApplicationIdGuid>F5654CAE-0CF5-46AE-B8C5-03A8812769E8</ApplicationIdGuid>
