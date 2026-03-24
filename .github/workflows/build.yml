@@ -47,9 +47,9 @@ jobs:
     - name: Build Library & Sample
       run: dotnet build ${{ env.PathToLibrarySolution }} --configuration Release
     - name: Test
-      run: dotnet test ${{ env.PathToMauiFullScreenTestsCsproj }} --configuration Release --no-build --verbosity normal
+      run: dotnet test ${{ env.PathToMauiFullScreenTestsCsproj }} --configuration Release --verbosity normal
     - name: Pack Library Packages
-      run: dotnet pack ${{ env.PathToLibrarySolution }} --configuration Release --no-build
+      run: dotnet pack ${{ env.PathToLibrarySolution }} --configuration Release
     - name: Upload NuGet Packages
       uses: actions/upload-artifact@v7
       with:
