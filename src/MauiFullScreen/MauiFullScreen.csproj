@@ -23,7 +23,7 @@
   <PropertyGroup>
     <GitInfoReportImportance>high</GitInfoReportImportance>
     <PackageId>IgrisModz.MauiFullScreen</PackageId>
-    <Summary>Community-created toolkit for .NET MAUI containing a collection of Animations, Behaviors, Converters, and Custom Views</Summary>
+    <Summary>Full screen helper for .NET MAUI applications</Summary>
     <Authors>IgrisModz</Authors>
     <Owners>IgrisModz</Owners>
     <NeutralLanguage>en</NeutralLanguage>
