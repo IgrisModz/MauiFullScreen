@@ -15,7 +15,7 @@ on:
             - README.md
 
 env:
-    TOOLKIT_NET_VERSION: '10.0.200'
+    TOOLKIT_NET_VERSION: '10.0.100'
     LATEST_NET_VERSION: '10.0.x'
     PathToLibrarySolution: 'src/MauiFullScreen.slnx'
     PathToSampleSolution: 'samples/MauiFullScreen.Sample.slnx'
@@ -48,7 +48,6 @@ jobs:
                 uses: actions/setup-dotnet@v5
                 with:
                     dotnet-version: ${{ env.LATEST_NET_VERSION }}
-                    dotnet-quality: 'ga'
                 
             -   uses: actions/setup-java@v5
                 with:
@@ -87,7 +86,6 @@ jobs:
                 uses: actions/setup-dotnet@v5
                 with:
                     dotnet-version: ${{ env.TOOLKIT_NET_VERSION }}
-                    dotnet-quality: 'ga'
 
             -   uses: actions/setup-java@v5
                 with:
