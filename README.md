@@ -30,6 +30,18 @@ Window?.ToggleFullScreen();
 // Set the full-screen state directly
 // (enable only if not already in the desired state)
 Window?.SetFullScreen(isFull);
+
+// Hide the status bar (Android)
+Window?.HideStatusBar();
+
+// Show the status bar (Android)
+Window?.ShowStatusBar();
+
+// Hide the navigation bar (Android)
+Window?.HideNavigationBar();
+
+// Show the navigation bar (Android)
+Window?.ShowNavigationBar();
 ```
 
 ## Integration Example (MauiFullScreen.Sample)
@@ -49,6 +61,32 @@ void OnFullScreenClicked(object? sender, EventArgs e)
 	Window?.SetFullScreen(enable);
 
 	FullScreenBtn.Text = enable ? "FullScreen [On]" : "FullScreen [Off]";
+}
+
+bool statusBarHidden = false, navigationBarHidden = false;
+
+void OnStatusBarVisibilityClicked(object? sender, EventArgs e)
+{
+    statusBarHidden = !statusBarHidden;
+    if (statusBarHidden)
+        Window?.HideStatusBar();
+    else
+        Window?.ShowStatusBar();
+    SafeAreaEdges = MainRoot.SafeAreaEdges = statusBarHidden
+        ? SafeAreaEdges.None
+        : SafeAreaEdges.Default;
+    StatusBarBtn.Text = statusBarHidden ? "Status Bar [Hidden]" : "Status Bar [Visible]";
+}
+
+void OnNavigationBarVisibilityClicked(object? sender, EventArgs e)
+{
+    navigationBarHidden = !navigationBarHidden;
+    if (navigationBarHidden)
+        Window?.HideNavigationBar();
+    else
+        Window?.ShowNavigationBar();
+    // Safe Area not affected by navigation bar visibility on Android, so we don't adjust it here.
+    NavigationBarBtn.Text = navigationBarHidden ? "Navigation Bar [Hidden]" : "Navigation Bar [Visible]";
 }
 ```
 

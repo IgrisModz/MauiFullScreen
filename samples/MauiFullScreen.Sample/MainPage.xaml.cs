@@ -2,6 +2,8 @@
 
 public partial class MainPage : ContentPage
 {
+	bool statusBarHidden, navigationBarHidden;
+
 	public MainPage()
 	{
 		InitializeComponent();
@@ -65,7 +67,42 @@ public partial class MainPage : ContentPage
 		};
 
 		MainRefreshView.Refreshing += (_, _) => MainWebView.Reload();
+		StatusBarBtn.Clicked += OnStatusBarVisibilityClicked;
+		NavigationBarBtn.Clicked += OnNavigationBarVisibilityClicked;
 		FullScreenBtn.Clicked += OnFullScreenClicked;
+	}
+
+	void OnStatusBarVisibilityClicked(object? sender, EventArgs e)
+	{
+		statusBarHidden = !statusBarHidden;
+		if (statusBarHidden)
+		{
+			Window?.HideStatusBar();
+		}
+		else
+		{
+			Window?.ShowStatusBar();
+		}
+
+		SafeAreaEdges = MainRoot.SafeAreaEdges = statusBarHidden
+			? SafeAreaEdges.None
+			: SafeAreaEdges.Default;
+		StatusBarBtn.Text = statusBarHidden ? "Status Bar [Hidden]" : "Status Bar [Visible]";
+	}
+
+	void OnNavigationBarVisibilityClicked(object? sender, EventArgs e)
+	{
+		navigationBarHidden = !navigationBarHidden;
+		if (navigationBarHidden)
+		{
+			Window?.HideNavigationBar();
+		}
+		else
+		{
+			Window?.ShowNavigationBar();
+		}
+
+		NavigationBarBtn.Text = navigationBarHidden ? "Navigation Bar [Hidden]" : "Navigation Bar [Visible]";
 	}
 
 	void OnFullScreenClicked(object? sender, EventArgs e)

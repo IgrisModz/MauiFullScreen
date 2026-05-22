@@ -39,7 +39,7 @@
     <Description>Full screen helper for .NET MAUI applications</Description>
     <PackageIcon>icon.png</PackageIcon>
     <Product>$(AssemblyName) ($(TargetFramework))</Product>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
     <PackageVersion>$(Version)$(VersionSuffix)</PackageVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>dotnet,maui,fullscreen,igrismodz,android,ios,maccatalyst,windows</PackageTags>

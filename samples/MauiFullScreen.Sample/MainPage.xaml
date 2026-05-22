@@ -13,22 +13,29 @@
     </ContentPage.Behaviors>
 
     <Grid x:Name="MainRoot" RowDefinitions="*,Auto">
-        <RefreshView
-            x:Name="MainRefreshView"
-            IsRefreshing="False">
-            <WebView
-                x:Name="MainWebView"
-                Source="https://github.com/IgrisModz"
-                android:WebView.DisplayZoomControls="False"
-                android:WebView.EnableZoomControls="True"
-                HorizontalOptions="Fill"
-                VerticalOptions="Fill" />
+        <RefreshView x:Name="MainRefreshView"
+                     IsRefreshing="False">
+            <WebView x:Name="MainWebView"
+                     Source="https://github.com/IgrisModz"
+                     android:WebView.DisplayZoomControls="False"
+                     android:WebView.EnableZoomControls="True"
+                     HorizontalOptions="Fill"
+                     VerticalOptions="Fill" />
         </RefreshView>
-        <Button x:Name="FullScreenBtn"
-                Grid.Row="1"
-                VerticalOptions="End"
-                SemanticProperties.Hint="Toggle fullscreen mode on click"
-                HorizontalOptions="Fill" />
+        <VerticalStackLayout Grid.Row="1"
+                             VerticalOptions="End">
+            <Button x:Name="StatusBarBtn"
+                    Text="Status Bar [Visible]"
+                    SemanticProperties.Hint="Toggle StatusBar visibility on click"
+                    HorizontalOptions="Fill" />
+            <Button x:Name="NavigationBarBtn"
+                    Text="Navigation Bar [Visible]"
+                    SemanticProperties.Hint="Toggle NavigationBar visibility on click"
+                    HorizontalOptions="Fill" />
+            <Button x:Name="FullScreenBtn"
+                    SemanticProperties.Hint="Toggle fullscreen mode on click"
+                    HorizontalOptions="Fill" />
+        </VerticalStackLayout>
     </Grid>
 
 </ContentPage>

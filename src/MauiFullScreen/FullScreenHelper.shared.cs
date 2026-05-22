@@ -50,4 +50,27 @@ public static partial class FullScreenHelper
 			DisableFullScreen(window);
 		}
 	}
+
+#if !ANDROID
+	/// <summary>
+	/// Hides the status bar (implemented on Android).
+	/// </summary>
+	public static void HideStatusBar(this Window window) { }
+
+	/// <summary>
+	/// Shows the status bar (implemented on Android).
+	/// </summary>
+	public static void ShowStatusBar(this Window window) { }
+
+	/// <summary>
+	/// Hides the navigation bar (implemented on Android).
+	/// </summary>
+	public static void HideNavigationBar(this Window window) { }
+
+	/// <summary>
+	/// Shows the navigation bar (implemented on Android).
+	/// </summary>
+	public static void ShowNavigationBar(this Window window) { }
+#endif
+
 }

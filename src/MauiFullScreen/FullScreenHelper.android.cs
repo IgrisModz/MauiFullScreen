@@ -1,7 +1,6 @@
 using Android.App;
 using Android.Util;
 using Android.Views;
-using Android.Widget;
 using AndroidX.Core.View;
 using View = Android.Views.View;
 using Window = Microsoft.Maui.Controls.Window;
@@ -14,7 +13,8 @@ public static partial class FullScreenHelper
 	static bool wasSystemBarVisible;
 
 	// Lists to manage multiple overlays (CommunityToolkit.Maui bug: StatusBar has no tag, so multiple overlays can be created)
-	static readonly List<View> statusBarOverlays = [];
+	// static readonly List<View> statusBarOverlays = [];
+	static View? statusBarOverlay;
 	static View? navigationBarOverlay;
 
 	/// <summary>
@@ -83,6 +83,175 @@ public static partial class FullScreenHelper
 		});
 	}
 
+	/// <summary>
+	/// Hides the status bar.
+	/// </summary>
+	public static void HideStatusBar(this Window window)
+	{
+		RunOnUiThread(() =>
+		{
+			var currentWindow = (window.Handler?.PlatformView as Activity)?.Window ?? Platform.CurrentActivity?.Window;
+			if (currentWindow is not { DecorView: { IsAttachedToWindow: true } decorView } aWindow)
+			{
+				return;
+			}
+
+			if (OperatingSystem.IsAndroidVersionAtLeast(28))
+			{
+				aWindow.Attributes?.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
+			}
+
+			var controller = WindowCompat.GetInsetsController(aWindow, decorView);
+
+			if (OperatingSystem.IsAndroidVersionAtLeast(35))
+			{
+				var decorGroup = (ViewGroup)decorView;
+				if ((statusBarOverlay = decorGroup.FindViewWithTag("StatusBarOverlay")) is not null)
+				{
+					statusBarOverlay.Visibility = ViewStates.Gone;
+				}
+
+				aWindow.ClearFlags(WindowManagerFlags.DrawsSystemBarBackgrounds);
+			}
+
+			WindowCompat.SetDecorFitsSystemWindows(aWindow, false);
+
+			if (OperatingSystem.IsAndroidVersionAtLeast(30))
+			{
+				aWindow.AddFlags(WindowManagerFlags.Fullscreen | WindowManagerFlags.LayoutNoLimits);
+				aWindow.ClearFlags(WindowManagerFlags.ForceNotFullscreen);
+				controller?.Hide(WindowInsetsCompat.Type.StatusBars());
+				controller?.SystemBarsBehavior = WindowInsetsControllerCompat.BehaviorShowTransientBarsBySwipe;
+			}
+			else
+			{
+				decorView.SystemUiFlags |= SystemUiFlags.LayoutStable | SystemUiFlags.LayoutFullscreen | SystemUiFlags.Fullscreen | SystemUiFlags.ImmersiveSticky;
+				aWindow.AddFlags(WindowManagerFlags.Fullscreen);
+			}
+		});
+	}
+
+	/// <summary>
+	/// Shows the status bar.
+	/// </summary>
+	public static void ShowStatusBar(this Window window)
+	{
+		RunOnUiThread(() =>
+		{
+			var currentWindow = (window.Handler?.PlatformView as Activity)?.Window ?? Platform.CurrentActivity?.Window;
+			if (currentWindow is not { DecorView: { IsAttachedToWindow: true } decorView } aWindow)
+			{
+				return;
+			}
+
+			var controller = WindowCompat.GetInsetsController(aWindow, decorView);
+
+			if (OperatingSystem.IsAndroidVersionAtLeast(35))
+			{
+				if (statusBarOverlay is not null)
+				{
+					statusBarOverlay.Visibility = ViewStates.Visible;
+					statusBarOverlay = null;
+				}
+			}
+
+			if (OperatingSystem.IsAndroidVersionAtLeast(30))
+			{
+				controller?.Show(WindowInsetsCompat.Type.StatusBars());
+			}
+			else
+			{
+				decorView.SystemUiFlags &= ~(SystemUiFlags.Fullscreen | SystemUiFlags.LayoutFullscreen);
+				aWindow.ClearFlags(WindowManagerFlags.Fullscreen);
+			}
+		});
+	}
+
+	/// <summary>
+	/// Hides the navigation bar.
+	/// </summary>
+	public static void HideNavigationBar(this Window window)
+	{
+		RunOnUiThread(() =>
+		{
+			var currentWindow = (window.Handler?.PlatformView as Activity)?.Window ?? Platform.CurrentActivity?.Window;
+			if (currentWindow is not { DecorView: { IsAttachedToWindow: true } decorView } aWindow)
+			{
+				return;
+			}
+
+			if (OperatingSystem.IsAndroidVersionAtLeast(28))
+			{
+				if (aWindow.Attributes != null)
+				{
+					aWindow.Attributes.LayoutInDisplayCutoutMode = LayoutInDisplayCutoutMode.ShortEdges;
+				}
+			}
+
+			var controller = WindowCompat.GetInsetsController(aWindow, decorView);
+
+			if (OperatingSystem.IsAndroidVersionAtLeast(35))
+			{
+				var decorGroup = (ViewGroup)decorView;
+				if ((navigationBarOverlay = decorGroup.FindViewWithTag("NavigationBarOverlay")) is not null)
+				{
+					navigationBarOverlay.Visibility = ViewStates.Gone;
+				}
+				aWindow.ClearFlags(WindowManagerFlags.DrawsSystemBarBackgrounds);
+			}
+
+			WindowCompat.SetDecorFitsSystemWindows(aWindow, false);
+
+			if (OperatingSystem.IsAndroidVersionAtLeast(30))
+			{
+				controller?.Hide(WindowInsetsCompat.Type.NavigationBars());
+				if (controller != null)
+				{
+					controller.SystemBarsBehavior = WindowInsetsControllerCompat.BehaviorShowTransientBarsBySwipe;
+				}
+			}
+			else
+			{
+				decorView.SystemUiFlags |= SystemUiFlags.LayoutStable | SystemUiFlags.LayoutHideNavigation | SystemUiFlags.HideNavigation | SystemUiFlags.ImmersiveSticky;
+			}
+		});
+	}
+
+	/// <summary>
+	/// Shows the navigation bar.
+	/// </summary>
+	public static void ShowNavigationBar(this Window window)
+	{
+		RunOnUiThread(() =>
+		{
+			var currentWindow = (window.Handler?.PlatformView as Activity)?.Window ?? Platform.CurrentActivity?.Window;
+			if (currentWindow is not { DecorView: { IsAttachedToWindow: true } decorView } aWindow)
+			{
+				return;
+			}
+
+			var controller = WindowCompat.GetInsetsController(aWindow, decorView);
+
+			if (OperatingSystem.IsAndroidVersionAtLeast(35))
+			{
+				if (navigationBarOverlay is not null)
+				{
+					navigationBarOverlay.Visibility = ViewStates.Visible;
+					navigationBarOverlay = null;
+				}
+			}
+
+			if (OperatingSystem.IsAndroidVersionAtLeast(30))
+			{
+				controller?.Show(WindowInsetsCompat.Type.NavigationBars());
+			}
+			else
+			{
+				decorView.SystemUiFlags &= ~(SystemUiFlags.HideNavigation | SystemUiFlags.LayoutHideNavigation);
+			}
+		});
+	}
+
 	static void ApplyHide(Android.Views.Window window, View decorView)
 	{
 		var controller = WindowCompat.GetInsetsController(window, decorView);
@@ -93,14 +262,19 @@ public static partial class FullScreenHelper
 		{
 			var decorGroup = (ViewGroup)decorView;
 
-			// Hide ALL StatusBar overlays (CTK bug: multiple can exist because no tag is set)
-			foreach (var overlay in FindAllStatusBarOverlays(decorGroup))
+			//// Hide ALL StatusBar overlays (CTK bug: multiple can exist because no tag is set)
+			//foreach (var overlay in FindAllStatusBarOverlays(decorGroup))
+			//{
+			//	overlay.Visibility = ViewStates.Gone;
+			//	if (!statusBarOverlays.Contains(overlay))
+			//	{
+			//		statusBarOverlays.Add(overlay);
+			//	}
+			//}
+
+			if ((statusBarOverlay = decorGroup.FindViewWithTag("StatusBarOverlay")) is not null)
 			{
-				overlay.Visibility = ViewStates.Gone;
-				if (!statusBarOverlays.Contains(overlay))
-				{
-					statusBarOverlays.Add(overlay);
-				}
+				statusBarOverlay.Visibility = ViewStates.Gone;
 			}
 
 			if ((navigationBarOverlay = decorGroup.FindViewWithTag("NavigationBarOverlay")) is not null)
@@ -150,13 +324,16 @@ public static partial class FullScreenHelper
 			window.ClearFlags(WindowManagerFlags.LayoutNoLimits);
 			window.SetFlags(WindowManagerFlags.DrawsSystemBarBackgrounds, WindowManagerFlags.DrawsSystemBarBackgrounds);
 
-			// Restore ALL StatusBar overlays
-			foreach (var overlay in statusBarOverlays)
-			{
-				overlay.Visibility = ViewStates.Visible;
-			}
+			//// Restore ALL StatusBar overlays
+			//foreach (var overlay in statusBarOverlays)
+			//{
+			//	overlay.Visibility = ViewStates.Visible;
+			//}
 
-			statusBarOverlays.Clear();
+			//statusBarOverlays.Clear();
+
+			statusBarOverlay?.Visibility = ViewStates.Visible;
+			statusBarOverlay = null;
 
 			navigationBarOverlay?.Visibility = ViewStates.Visible;
 			navigationBarOverlay = null;
@@ -196,33 +373,33 @@ public static partial class FullScreenHelper
 		catch (Exception ex) { Log.Error("FullscreenService", ex.Message); }
 	});
 
-	/// <summary>
-	/// Finds ALL StatusBarOverlays from CommunityToolkit.Maui.
-	/// CTK bug: StatusBar has no tag defined, so FindViewWithTag doesn't work
-	/// and a new overlay is created on each color change → multiple stacked overlays.
-	/// </summary>
-	static List<View> FindAllStatusBarOverlays(ViewGroup decorGroup)
-	{
-		var overlays = new List<View>();
-		var resources = Platform.CurrentActivity?.Resources;
-		if (resources is null)
-		{
-			return overlays;
-		}
+	///// <summary>
+	///// Finds ALL StatusBarOverlays from CommunityToolkit.Maui.
+	///// CTK bug: StatusBar has no tag defined, so FindViewWithTag doesn't work
+	///// and a new overlay is created on each color change → multiple stacked overlays.
+	///// </summary>
+	//static List<View> FindAllStatusBarOverlays(ViewGroup decorGroup)
+	//{
+	//	var overlays = new List<View>();
+	//	var resources = Platform.CurrentActivity?.Resources;
+	//	if (resources is null)
+	//	{
+	//		return overlays;
+	//	}
 
-		var heightId = resources.GetIdentifier("status_bar_height", "dimen", "android");
-		var expectedHeight = (heightId > 0 ? resources.GetDimensionPixelSize(heightId) : 0) + 3;
+	//	var heightId = resources.GetIdentifier("status_bar_height", "dimen", "android");
+	//	var expectedHeight = (heightId > 0 ? resources.GetDimensionPixelSize(heightId) : 0) + 3;
 
-		for (var i = 0; i < decorGroup.ChildCount; i++)
-		{
-			if (decorGroup.GetChildAt(i) is { LayoutParameters: FrameLayout.LayoutParams { Gravity: GravityFlags.Top, Width: ViewGroup.LayoutParams.MatchParent } lp } child
-				&& lp.Height == expectedHeight)
-			{
-				overlays.Add(child);
-			}
-		}
-		return overlays;
-	}
+	//	for (var i = 0; i < decorGroup.ChildCount; i++)
+	//	{
+	//		if (decorGroup.GetChildAt(i) is { LayoutParameters: FrameLayout.LayoutParams { Gravity: GravityFlags.Top, Width: ViewGroup.LayoutParams.MatchParent } lp } child
+	//			&& lp.Height == expectedHeight)
+	//		{
+	//			overlays.Add(child);
+	//		}
+	//	}
+	//	return overlays;
+	//}
 
 	#endregion
 }
