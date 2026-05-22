@@ -16,24 +16,23 @@
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<AllowMissingPrunePackageData>true</AllowMissingPrunePackageData>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<IsPackable>false</IsPackable>
 
-		<RootNamespace>MauiFullScreen.Sample</RootNamespace>
-		<ApplicationIdGuid>F5654CAE-0CF5-46AE-B8C5-03A8812769E8</ApplicationIdGuid>
-		
-		<!-- Display name -->
-		<ApplicationTitle>MauiFullScreen.Sample</ApplicationTitle>
+    <RootNamespace>MauiFullScreen.Sample</RootNamespace>
+    <ApplicationIdGuid>F5654CAE-0CF5-46AE-B8C5-03A8812769E8</ApplicationIdGuid>
 
-		<!-- App Identifier -->
-		<ApplicationId>com.igrismodz.mauifullscreen.sample</ApplicationId>
+    <!-- Display name -->
+    <ApplicationTitle>MauiFullScreen.Sample</ApplicationTitle>
 
-		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+    <!-- App Identifier -->
+    <ApplicationId>com.igrismodz.mauifullscreen.sample</ApplicationId>
 
-		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
-		<WindowsPackageType>None</WindowsPackageType>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+
+    <!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
+    <WindowsPackageType>None</WindowsPackageType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
@@ -41,13 +40,6 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'&#xD;&#xA;      AND $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'windows'">
-    <!-- Windows error NETSDK1102: Optimizing assemblies for size is not supported for the selected publish configuration. -->
-    <PublishAot>false</PublishAot>
-    <PublishTrimmed>true</PublishTrimmed>
-    <TrimMode>partial</TrimMode>
-  </PropertyGroup>
 
 	<ItemGroup>
 		<!-- App Icon -->
@@ -58,7 +50,6 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 		
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -70,7 +61,6 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="*" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="14.1.1" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.8" />
 	</ItemGroup>
 
   <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)'))=='windows' and $(Configuration) == 'Release'">
@@ -87,6 +77,10 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\MauiFullScreen\MauiFullScreen.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Resources\Images\" />
 	</ItemGroup>
 
 </Project>
