@@ -14,10 +14,11 @@
 	  <NuGetAudit>enable</NuGetAudit>
 	  <NuGetAuditMode>all</NuGetAuditMode>
     
-	  <!-- MAUI Specific -->
-    <MauiXamlInflator>SourceGen</MauiXamlInflator>
-	  <MauiPackageVersion>10.0.60</MauiPackageVersion>
-	  <MauiStrictXamlCompilation>true</MauiStrictXamlCompilation>
+		<!-- MAUI Specific -->
+		<MauiXamlInflator>SourceGen</MauiXamlInflator>
+		<MauiVersion>10.0.60</MauiVersion>
+		<MauiPackageVersion>10.0.60</MauiPackageVersion>
+		<MauiStrictXamlCompilation>true</MauiStrictXamlCompilation>
 	  <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>
 	  <MauiEnableXamlCBindingWithSourceCompilation>true</MauiEnableXamlCBindingWithSourceCompilation>
     
