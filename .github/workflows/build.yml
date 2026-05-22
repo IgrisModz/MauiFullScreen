@@ -23,7 +23,7 @@ env:
     PathToMauiFullScreenTestsCsproj: 'src/MauiFullScreen.Tests/MauiFullScreen.Tests.csproj'
     PathToMauiFullScreenCsproj: 'src/MauiFullScreen/MauiFullScreen.csproj'
     MauiFullScreenLibrary_Xcode_Version: '26.1'
-    MauiFullScreenSample_Xcode_Version: '26.2'
+    MauiFullScreenSample_Xcode_Version: '^26'
 
 jobs:
     build_sample:
